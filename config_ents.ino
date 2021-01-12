@@ -1,0 +1,5 @@
+insured  = NAME, ORG,
+as_of = DATE,
+incurred = MONEY,
+total_paid = MONEY,
+total_incurred = MONEY,
