@@ -170,7 +170,8 @@ def spatial_filter(txt_dict, topics, report_type):
         all_candidates: List with text in same column and same row
     '''
 
-    all_candidates = []
+    all_vertical_candidates = []
+    all_horizontal_candidates = []
     for topic in range(len(topics)):
         (l, t, w, h) = (txt_dict['left'][topics[topic][2]],
                     txt_dict['top'][topics[topic][2]],
@@ -234,8 +235,10 @@ def spatial_filter(txt_dict, topics, report_type):
                     horizontal_candidates.append(txt_text)
 
 
-        all_candidates +=  ([vertical_candidates], [horizontal_candidates])
-    return all_candidates
+        all_vertical_candidates +=  [vertical_candidates]
+        all_horizontal_candidates += [horizontal_candidates]
+    #return all_candidates 
+    return all_vertical_candidates, all_horizontal_candidates
 
 def pre_proc(pdf_file, data_path, topic_file, image_format = '.png', text_format = '.txt'):
     '''Read raw txt info in pdf report, text file and image then search a topic and create a circle for each target
@@ -480,3 +483,43 @@ def print_help():
     license:        .
     """
     return help_message
+"""
+def cross_search(word_1 = "", word_2 ="", txt_dict):
+
+    if word_1
+
+    all_candidates = []
+    for topic in range(len(topics)):
+        (l, t, w, h) = (txt_dict['left'][topics[topic][2]],
+                    txt_dict['top'][topics[topic][2]],
+                    txt_dict['width'][topics[topic][2]],
+                    txt_dict['height'][topics[topic][2]]
+                    )
+        vertical_candidates = []
+        horizontal_candidates = []
+
+        if report_type == 'LOSSRUN':
+            for i in range(len(txt_dict['text'])):
+                txt_left = txt_dict['left'][i]
+                txt_top = txt_dict['top'][i]
+                txt_text = txt_dict['text'][i]
+
+                if (txt_left > l - w and txt_left < l + w and txt_top > t):
+                    vertical_candidates.append(txt_text)
+            
+            for i in range(len(txt_dict['text'])):
+                txt_left = txt_dict['left'][i]
+                txt_top = txt_dict['top'][i]
+                txt_text = txt_dict['text'][i]
+
+                if (txt_top > t - h and txt_top < t + h and txt_left > l) and (txt_left-(l + w)<300):
+                    horizontal_candidates.append(txt_text)
+
+        all_candidates +=  ([vertical_candidates], [horizontal_candidates])
+    return all_candidates
+    """
+def center_of_mass(dictionary, index):
+    x = (dictionary['top'][index] + dictionary['heigth'][index])//2 + dictionary['top'][index]
+    y = (dictionary['left'][index] + dictionary['width'][index])//2 + dictionary['left'][index]
+
+    return (x,y)
