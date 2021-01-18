@@ -523,7 +523,10 @@ def text_from_dict(dictionary):
     return ' '.join(dictionary['text'])
 
 def center_of_mass(dictionary, index):
-    x = dictionary['top'][index] #dictionary['height'][index] // 2 + dictionary['top'][index]
-    y = dictionary['left'][index] #dictionary['width'][index] // 2 + dictionary['left'][index]
+    x1 = dictionary['top'][index]
+    x2 = dictionary['height'][index] + x1
+     #dictionary['height'][index] // 2 + dictionary['top'][index]
+    y1 = dictionary['left'][index] #dictionary['width'][index] // 2 + dictionary['left'][index]
+    y2 = dictionary['width'][index] + y1#dictionary['width'][index] // 2 + dictionary['left'][index]
 
-    return (x,y)
+    return [(x1,y1), (x2,y2)]

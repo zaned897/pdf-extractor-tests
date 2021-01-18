@@ -28,9 +28,9 @@ for image in images:
 
 
 
-#   PROTOTYPE FUNCTION TO THE GET THE CENTER OF MASS OF THE SUSPECTS
+# %%  PROTOTYPE FUNCTION TO THE GET THE CENTER OF MASS OF THE SUSPECTS
 page = 0
-TOPIC = ['TOTAL', 'PAID']
+TOPIC = ['TOTAL']
 topic_coords = []
 for index, word in enumerate(dictionaries[page]['text']):
     if word.upper() in TOPIC:
@@ -40,8 +40,9 @@ for index, word in enumerate(dictionaries[page]['text']):
 #print(dictionaries[0]['text'])
 print('The center of mass for the suspects are:', f'{topic_coords}')
 
-
-#%%     VISUALIZATE THE CENTRAL POINTS
+#%%
+#%     VISUALIZATE THE CENTRAL POINTS
+"""
 plt.figure(figsize=(23,20))
 image_res = np.array(images[page])
 
@@ -51,18 +52,19 @@ for (x,y) in topic_coords:
     cv2.circle(image_res, center= (y,x), radius=10, color=(0), thickness=15)
 
 plt.imshow(image_res,cmap='gray')
-#%%     INTERSECTION TEST 1
+"""
+#    INTERSECTION TEST 1
 y_coords = []
 x_coords = []
 
 for (x ,y) in topic_coords:
     x_coords.append(x)
     y_coords.append(y)
-
+#%
 for index, word in enumerate(dictionaries[page]['text']):
         top = dictionaries[page]['top'][index] + dictionaries[page]['height'][index] // 2
         left = dictionaries[page]['left'][index] + dictionaries[page]['width'][index] // 2
-        if any(abs(top-np.array(x_coords)) < 50 ) and any(abs(left-np.array(y_coords)) < 50 ) :
+        if any(abs(top-np.array(x_coords)) < 300 ) and any(abs(left-np.array(y_coords)) < 300 ) and not(word.upper() in TOPIC) and (word!=''):
             #print(top - np.array(x_coords))
             #print(left - np.array(y_coords))
             print (word)
@@ -80,4 +82,29 @@ for index, word in enumerate(dictionaries[page]['text']):
 #            print(top - np.array(x_coords))
 #            print(left - np.array(y_coords))
 #            print (word)
+#%% INSTERSECTION TEST 4
+
+# get the word in the same row 
+words_in_row =[]
+for index, word in enumerate(dictionaries[page]['text']):
+    t2 = dictionaries[page]['top'][index]
+    h2 = dictionaries[page]['height'][index] + t2
+    l2 = dictionaries[page]['left'][index]
+    w2 = dictionaries[page]['width'][index] + l2
+    [words_in_row.append((word,l2,w2)) for coord in topic_coords if h2>coord[0][0] and t2 < coord[1][0] and word != '' and not word.upper() in TOPIC]
+
+#get the word in row if they are in  the same column
+
+words_in_inter = []
+
+for match in words_in_row:
+    l2 = match[1]
+    w2 = match[2]
+
+    [words_in_inter.append(match) for coord in topic_coords if l2 < coord[1][1] and w2 > coord [0][1]]
+
+print(words_in_inter)
+# %%
+plt.figure(figsize=(17,15))
+plt.imshow(np.array(images[0]))
 
