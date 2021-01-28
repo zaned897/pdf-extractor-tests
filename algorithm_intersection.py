@@ -18,8 +18,9 @@ from pdf2image import convert_from_path
 from pytesseract import Output
 from configobj import ConfigObj
 #%   read data
-FILE = 'cross_test.pdf'
+FILE = 'LRT001.pdf'
 images = convert_from_path(FILE, dpi=350, grayscale=True)
+
 dictionaries = []
 
 
@@ -29,8 +30,8 @@ for image in images:
 
 
 # %%  PROTOTYPE FUNCTION TO THE GET THE CENTER OF MASS OF THE SUSPECTS
-page = 0
-TOPIC = ['TOTAL']
+page = 3
+TOPIC = ['TOTAL', 'PAID']
 topic_coords = []
 for index, word in enumerate(dictionaries[page]['text']):
     if word.upper() in TOPIC:
@@ -42,18 +43,18 @@ print('The center of mass for the suspects are:', f'{topic_coords}')
 
 #%%
 #%     VISUALIZATE THE CENTRAL POINTS
-"""
+
 plt.figure(figsize=(23,20))
 image_res = np.array(images[page])
 
 inter = []
 for (x,y) in topic_coords:
     #print(x,y)
-    cv2.circle(image_res, center= (y,x), radius=10, color=(0), thickness=15)
+    cv2.circle(image_res, center= (x[1],x[0]), radius=10, color=(0), thickness=15)
 
 plt.imshow(image_res,cmap='gray')
-"""
-#    INTERSECTION TEST 1
+
+# %%   INTERSECTION TEST 1
 y_coords = []
 x_coords = []
 
@@ -101,10 +102,14 @@ for match in words_in_row:
     l2 = match[1]
     w2 = match[2]
 
-    [words_in_inter.append(match) for coord in topic_coords if l2 < coord[1][1] and w2 > coord [0][1]]
+    [words_in_inter.append(match[0]) for coord in topic_coords if l2 < coord[1][1] and w2 > coord [0][1]]
 
 print(words_in_inter)
 # %%
-plt.figure(figsize=(17,15))
-plt.imshow(np.array(images[0]))
+#plt.figure(figsize=(17,15))
+#plt.imshow(np.array(images[0]), cmap='gray')
 
+
+for index, field in enumerate(dictionaries[0]):
+    
+    print(field, dictionaries[0][field][10:15])
